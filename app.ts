@@ -1,25 +1,33 @@
-enum StatusCode {
-    PUBL = 'published',
-    DRAFT = 'draft',
-    DEL = 'deleted'
+function logId (id: string | number | boolean ){
+    if (typeof id === 'string'){
+        console.log(id.toUpperCase)
+    }else if(typeof id === 'number'){
+        console.log(id)
+    }else{
+        console.log(id)
+    }
 }
 
-async function getFaqs(req:{
-    topicId: number;
-    status: StatusCode;
-}): Promise<{
-    question: string;
-    answer: string;
-    tags: string[];
-    likes: number;
-    status: StatusCode;
-    
-    }[]> {
-    const res = await fetch('/faqs', {
-        method: 'POST',
-        body: JSON.stringify(req)
-    });
-    const data = await res.json();
-    return data;
-    
+function logError (err: string | string [] ){
+    if (Array.isArray(err)){
+        console.log(err);
+    }else{
+        console.log(err);
+    }
+}
+
+function logObject (obj: {a: number; } | {b: string}){
+    if ('a' in obj){
+        console.log(obj.a);
+    }else{
+        console.log(obj.b);
+    }
+}
+
+function logMultiple( a: string | number, b: string | boolean){
+    if( a === b){
+        console.log(a);
+    }else{
+        console.log(a);
+    }
 }
