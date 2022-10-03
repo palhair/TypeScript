@@ -1,14 +1,41 @@
 
-// tuples
+// readonly
 
-const skills: [number, string]  = [1, 'Dev'];
-const id = skills[0];
-const skillName = skills[1];
+const skills: readonly [number, string]  = [1, 'Dev'];
 
-skills.push('dfdfdf'); //push не ограничен
-//const nowork = skills[2];
-skills.pop();
+const skill: readonly string[] = ['dev', "dev"];
 
-const [idd, skill] = skills;
+//enum
+enum StatusCode {
+    SUCCESS = 's',
+    IN_PROCESS = 'p',
+    FAILED = 'f'
+}
 
-const arr: [number, string, ...boolean[]] = [1, 'ffee', false, true];
+const res = {
+    message: 'Платеж успешен',
+    statusCode: StatusCode.SUCCESS
+}
+
+if (res.statusCode === StatusCode.SUCCESS){
+
+}
+
+function action (status: StatusCode){
+
+}
+
+action(StatusCode.IN_PROCESS)
+
+
+//1 - успех
+//2 - в процессе
+//3 - отклонен
+
+const enum Roles {
+    ADMIN = 1,
+    USER = 2
+}
+
+
+const res2 = Roles.ADMIN;

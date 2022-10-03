@@ -1,10 +1,21 @@
 "use strict";
-// tuples
+// readonly
 const skills = [1, 'Dev'];
-const id = skills[0];
-const skillName = skills[1];
-skills.push('dfdfdf'); //push не ограничен
-//const nowork = skills[2];
-skills.pop();
-const [idd, skill] = skills;
-const arr = [1, 'ffee', false, true];
+const skill = ['dev', "dev"];
+//enum
+var StatusCode;
+(function (StatusCode) {
+    StatusCode["SUCCESS"] = "s";
+    StatusCode["IN_PROCESS"] = "p";
+    StatusCode["FAILED"] = "f";
+})(StatusCode || (StatusCode = {}));
+const res = {
+    message: 'Платеж успешен',
+    statusCode: StatusCode.SUCCESS
+};
+if (res.statusCode === StatusCode.SUCCESS) {
+}
+function action(status) {
+}
+action(StatusCode.IN_PROCESS);
+const res2 = 1 /* Roles.ADMIN */;
