@@ -1,10 +1,12 @@
 "use strict";
-function fetchWithAuth(url, method) {
-    return 1;
-}
 let user = {
     name: "flow",
     age: 88,
     skills: ['fff', 'eee'],
-    id: 1
+    roleId: 1,
+    createdAd: new Date(),
+    log(id) {
+        return 'dd';
+    }
 };
+user.log(10);

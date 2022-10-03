@@ -1,24 +1,43 @@
-type httpMethod = 'post' | 'get'
 
 
-function fetchWithAuth(url: string, method: httpMethod) : 1 | -1{
- return 1;
+interface UserFields  {
+    name: string,
+    age: number,
+    skills: string[],
+
+    log: (id: number) => string
 }
 
-type UserFields = {name: string, age: number, skills: string[]}
+type UserFields2 = {
+    name: string,
+    age: number,
+    skills: string[],
 
-type Role = { id: number, name: string}
-
-type UserWithRole = {
-    user: UserFields,
-    role: Role
+    log: (id: number) => string
+}
+interface Role {
+    roleId: number;
+    name: string
+}
+interface userWithRole extends UserFields, Role {
+    createdAd: Date
 }
 
-let user: UserFields &  Role = {
+
+let user: userWithRole = {
     name: "flow",
     age: 88,
     skills: ['fff', 'eee'],
-    id: 1
+    roleId: 1,
+    createdAd: new Date(),
+    log(id){
+        return 'dd';
+    }
+ 
+};
+user.log(10);
+interface UserDic {
+    [index: number]: UserFields
 }
 
 
