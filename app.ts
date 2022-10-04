@@ -1,44 +1,34 @@
-
-
-interface UserFields  {
-    name: string,
-    age: number,
-    skills: string[],
-
-    log: (id: number) => string
+type User = {
+    login: string;
+    password?: string ;
 }
 
-type UserFields2 = {
-    name: string,
-    age: number,
-    skills: string[],
-
-    log: (id: number) => string
-}
-interface Role {
-    roleId: number;
-    name: string
-}
-interface userWithRole extends UserFields, Role {
-    createdAd: Date
+const user: User = {
+    login: 'log'    
 }
 
 
-let user: userWithRole = {
-    name: "flow",
-    age: 88,
-    skills: ['fff', 'eee'],
-    roleId: 1,
-    createdAd: new Date(),
-    log(id){
-        return 'dd';
+function multiply (first: number, second?: number /* = 5* default*/): number {
+    if (!second){
+        return first * first;
     }
- 
-};
-user.log(10);
-interface UserDic {
-    [index: number]: UserFields
+    return first * second;
+    
+}
+
+type UserPro = {
+    login: string;
+    password?: {
+        type: 'primary' | 'secodory'
+    } ;
 }
 
 
 
+function testPass( user: UserPro){
+    const t = user.password?.type;
+}
+
+function test (param?: string){
+    const t = param ?? multiply(5);
+}

@@ -1,12 +1,17 @@
 "use strict";
-let user = {
-    name: "flow",
-    age: 88,
-    skills: ['fff', 'eee'],
-    roleId: 1,
-    createdAd: new Date(),
-    log(id) {
-        return 'dd';
-    }
+const user = {
+    login: 'log'
 };
-user.log(10);
+function multiply(first, second /* = 5* default*/) {
+    if (!second) {
+        return first * first;
+    }
+    return first * second;
+}
+function testPass(user) {
+    var _a;
+    const t = (_a = user.password) === null || _a === void 0 ? void 0 : _a.type;
+}
+function test(param) {
+    const t = param !== null && param !== void 0 ? param : multiply(5);
+}
