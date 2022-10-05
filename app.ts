@@ -1,34 +1,37 @@
-type User = {
-    login: string;
-    password?: string ;
+interface Req {
+    sum: number;
+    from: number;
+    to: number;
 }
 
-const user: User = {
-    login: 'log'    
+interface Res {
+    status: "success" | 'failed',
+    data: DataErr| DataSuccses
 }
 
+interface DataErr {
+    errorMessage: string,
+    errorCode: 4
+}
 
-function multiply (first: number, second?: number /* = 5* default*/): number {
-    if (!second){
-        return first * first;
+interface DataSuccses extends Req {
+    databaseId: number;
+}
+
+const obj: Res = {
+    'status': 'success',
+    'data': {
+        'databaseId': 567,
+        "sum": 10000,
+        'from': 2,
+        'to': 4
     }
-    return first * second;
-    
 }
 
-type UserPro = {
-    login: string;
-    password?: {
-        type: 'primary' | 'secodory'
-    } ;
-}
-
-
-
-function testPass( user: UserPro){
-    const t = user.password?.type;
-}
-
-function test (param?: string){
-    const t = param ?? multiply(5);
-}
+const obj1: Res = {
+	"status": "failed",
+	"data": {
+		"errorMessage": "Недостаточно средств",
+		"errorCode": 4
+	}
+} 
