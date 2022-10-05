@@ -1,37 +1,65 @@
-interface Req {
-    sum: number;
-    from: number;
-    to: number;
+function logId(id: string | number ): void {
+    console.log(id);
 }
+const a = logId(1);
 
-interface Res {
-    status: "success" | 'failed',
-    data: DataErr| DataSuccses
-}
-
-interface DataErr {
-    errorMessage: string,
-    errorCode: 4
-}
-
-interface DataSuccses extends Req {
-    databaseId: number;
-}
-
-const obj: Res = {
-    'status': 'success',
-    'data': {
-        'databaseId': 567,
-        "sum": 10000,
-        'from': 2,
-        'to': 4
+function multiply(a: number, b?: number){
+    if (!a){
+        return a * a;
     }
 }
 
-const obj1: Res = {
-	"status": "failed",
-	"data": {
-		"errorMessage": "Недостаточно средств",
-		"errorCode": 4
-	}
+type voidFunction = () => void;
+
+const f1 : voidFunction =() =>{
+
+}
+
+const f2 : voidFunction =() =>{
+    return true;
+}
+
+const b = f2();
+
+const skills =['Dev', 'DevOps'];
+
+const user = {
+    s: ['s']
+}
+
+skills.forEach((skill) => user.s.push(skill));
+
+//unknown
+
+let input: unknown;
+
+input = 3;
+input = {};
+
+let res: any = input;
+let res1: string = res;
+
+function run (i: unknown){
+    if(typeof i == 'number'){
+        i++;
+    } else {
+        i;
+    }
+    
 } 
+
+run(input);
+
+async function getData() {
+    try {
+        await fetch('')
+    } catch(e) {
+        if (e instanceof Error){
+        console.log(e.message);
+        }
+    }
+}
+
+type U1 =  unknown | string;
+
+type I1 = unknown & string;
