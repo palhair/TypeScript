@@ -1,18 +1,21 @@
 "use strict";
 class User {
-    constructor(ageOrName, age) {
-        if (typeof ageOrName === 'string') {
-            this.name = ageOrName;
+    addSkill(skillOrSkills) {
+        if (typeof skillOrSkills === 'string') {
+            this.skills.push(skillOrSkills);
         }
-        else if (typeof ageOrName === 'string') {
-            this.age = ageOrName;
-        }
-        if (typeof age === 'number') {
-            this.age = age;
+        else {
+            this.skills.concat(skillOrSkills);
         }
     }
 }
-const user = new User('Nels');
-const user2 = new User();
-const user3 = new User('dfds', 32);
-console.log(user3);
+new User().addSkill('fsf');
+function run(distance) {
+    if (typeof distance === "number") {
+        return distance;
+    }
+    else {
+        return distance;
+    }
+}
+run();

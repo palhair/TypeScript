@@ -1,26 +1,27 @@
 class User {
-    name: string;
-    age: number;
-    constructor();
-    constructor(name: string);
-    constructor(age: number);
-    constructor(name: string, age: number );
-    constructor(ageOrName?: string | number, age?: number){
-        if(typeof ageOrName === 'string'){
-            this.name = ageOrName;
-        }else if(typeof ageOrName === 'string'){
-            this.age = ageOrName;
-        }
-        if(typeof age === 'number'){
-            this.age = age;
+    skills: string[];
+
+    addSkill(skill: string): void;
+    addSkill(skills: string[]): void;
+    addSkill(skillOrSkills: string | string []): void{
+        if (typeof skillOrSkills === 'string'){
+            this.skills.push(skillOrSkills);
+        }else{
+            this.skills.concat(skillOrSkills)
         }
     }
-    
-    
+
+}
+new User().addSkill('fsf');
+
+function run(distance: number): number;
+function run(distance: string): string;
+function run(distance: string | number): string | number{
+    if (typeof distance === "number"){
+        return distance;
+    }else{
+        return distance;
+    }
 }
 
-const user = new User('Nels');
-const user2 = new User();
-const user3 = new User( 'dfds', 32);
-console.log(user3);
-
+run();
