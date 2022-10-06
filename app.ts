@@ -1,52 +1,10 @@
-const n: null = null;
-const n1: any = null;
-
-
-interface User {
-    name: string;
-}
-
-function getUser() {
-    if (Math.random() > 0.5){
-        return null;
-    }else{
-        return {
-            name: "Вася"
-        } as User
-    }
-}
-
-const user = getUser();
-if(user){
-    const n55 = user.name;
-}
-
-let a = 5;
-let b: string = a.toString();
-let e: string = new String(a).valueOf();
-
-let c = 'cdsf';
-let d: number = parseInt(c);
-
 interface User {
     name: string;
     login: string;
     email: string;
 }
 
-const user1: User = {
-    name: "Vasya",
-    email: 'fsdf@fjk.ru',
-    login: 'vasia'
-}
-
-const user2 = {
-    name: "Vasya",
-    email: 'fsdf@fjk.ru',
-    login: 'vasia'
-} as User
-
-const user3: User = <User> {//не валидна в react
+const user: User = {
     name: "Vasya",
     email: 'fsdf@fjk.ru',
     login: 'vasia'
@@ -57,14 +15,32 @@ interface Admin {
     role: number;
 }
 
-const admin: Admin = {//чем так
-    ...user1,
-    role: 1
+function logId(id: string | number){
+    if (isString(id)){
+        console.log(id);
+    }else {
+        console.log(id);
+    }   
 }
 
-function userToAdmin(user: User): Admin{// лучше делать так
-    return {
-        name: user.name,
-        role: 1
-    }
+function isString(x: string | number): x is string{
+    return typeof x === 'string';
 }
+
+function isAdmin(user: User | Admin): user is Admin{//приоритетнее
+    return 'role' in user;
+}
+
+function isAdminAlternative(user: User | Admin): user is Admin{
+    return (user as Admin).role !== undefined;
+}
+
+function setRoleZero(user: User | Admin){
+    if(isAdmin(user)){
+        user.role = 0;
+    } else {
+        throw new Error('Пользователь не админ')
+    }
+    
+}
+
