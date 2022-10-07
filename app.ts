@@ -34,4 +34,34 @@ class ParsistedPayment extends Payment{
     }
 }
 
-new ParsistedPayment().dataBaseId
+new ParsistedPayment().dataBaseId;
+
+
+
+class User {
+    name: string = "user";
+    constructor(){
+        console.log(this.name);
+    }
+}
+
+class Admin extends User {
+    name: string = "admin";
+    constructor(){
+        super();
+        console.log(this.name);
+        
+    }
+}
+
+let adm = new Admin();
+
+class HttpError extends Error {
+    code: number;
+
+    constructor(message: string, code?: number){
+        super();
+        this.code = code ?? 500;
+    }
+}
+

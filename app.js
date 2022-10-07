@@ -1,29 +1,45 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-class Logger {
-    log(...args) {
-        console.log(...args);
+class Payment {
+    constructor(id) {
+        this.status = 'new';
+        this.id = id;
     }
-    error(...args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //кинуть во внешнюю сиситему
-            console.log(...args);
-        });
+    pay() {
+        this.status = 'paid';
     }
 }
-class User {
-    delete() {
-        throw new Error("Method not implemented.");
+class ParsistedPayment extends Payment {
+    constructor() {
+        const id = Math.random();
+        super(id);
     }
-    pay(paymentId) {
-        throw new Error("Method not implemented.");
+    save() {
+    }
+    pay(date) {
+        super.pay();
+        if (date) {
+            this.paidAt = date;
+        }
+    }
+}
+new ParsistedPayment().dataBaseId;
+class User {
+    constructor() {
+        this.name = "user";
+        console.log(this.name);
+    }
+}
+class Admin extends User {
+    constructor() {
+        super();
+        this.name = "admin";
+        console.log(this.name);
+    }
+}
+let adm = new Admin();
+class HttpError extends Error {
+    constructor(message, code) {
+        super();
+        this.code = code !== null && code !== void 0 ? code : 500;
     }
 }
