@@ -1,48 +1,34 @@
-class User {
-    name: string;
+class Vehicle {
+    public make: string;//доступны везде
+    private damages: string[];// доступны только в методах класса
+    private _model: string;
+    protected run: number;//доступны в методах класса и методах наследующих классов
+    #price: number;//private
 
-    constructor(name: string){
-        this.name = name;
+    set model(m: string){
+        this._model = m;
+        this.#price = 100;
+    }
+
+    get model(): string{
+        return this._model;
+    }
+
+    isPriceEqual(v: Vehicle){
+        return this.#price === v.#price; // имеем досту к приватному свойству внешнего класса
+    }
+
+    addDamage(damage: string){
+        this.damages.push(damage)
     }
 }
 
-class Users extends Array<User> { //наследование
-    searchByName(name: string) {
-        return this.filter(u => u.name === name);
-    }
+new Vehicle();
 
-    override toString(): string {
-        return this.map(u => u.name).join(', ')
+class EuroTruck extends Vehicle {
+    setRun(km: number) {
+        this.run = km / 0.62;
     }
 }
 
-const users = new Users();
-users.push(new User('Clod'));
-users.push(new User('Hero'));
-console.log(users.toString());
-
-class UserList { // композиция
-    users: User[];
-
-    push(u: User){
-        this.users.push(u);
-    }
-}
-
-class Payment {
-    date: Date;
-}
-
-class UserWithPayment extends Payment { //наследование (плохой вариант с разными сущностями)
-    name: string;
-}
-
-class UserWithPayment2 { // композиция
-    user: User;
-    payment: Payment;
-
-    constructor(user: User, payment: Payment){
-        this.payment = payment;
-        this.user = user;
-    }
-}
+new EuroTruck();
