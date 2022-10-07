@@ -1,27 +1,34 @@
-class User {
-    skills: string[];
-
-    addSkill(skill: string): void;
-    addSkill(skills: string[]): void;
-    addSkill(skillOrSkills: string | string []): void{
-        if (typeof skillOrSkills === 'string'){
-            this.skills.push(skillOrSkills);
-        }else{
-            this.skills.concat(skillOrSkills)
-        }
-    }
-
-}
-new User().addSkill('fsf');
-
-function run(distance: number): number;
-function run(distance: string): string;
-function run(distance: string | number): string | number{
-    if (typeof distance === "number"){
-        return distance;
-    }else{
-        return distance;
-    }
+interface ILogger {
+    //log: (...args) => void;
+    log(...args):void
+    error(...args):void;
 }
 
-run();
+class Logger implements ILogger {
+    log(...args: any[]): void {
+        console.log(...args);
+    }
+    async error(...args: any[]): Promise<void> {
+        //кинуть во внешнюю сиситему
+        console.log(...args);
+    }
+    
+}
+
+interface IPayable {
+    pay(paymentId: number) : void;
+    price?: number;
+}
+
+interface IDeletable {
+    delete(): void;
+}
+class User implements IPayable, IDeletable{
+    delete(): void {
+        throw new Error("Method not implemented.");
+    }
+    pay(paymentId: number): void {
+        throw new Error("Method not implemented.");
+    }
+   
+}
