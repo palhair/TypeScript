@@ -1,34 +1,37 @@
-interface ILogger {
-    //log: (...args) => void;
-    log(...args):void
-    error(...args):void;
+type PaymentStatus = 'new' | 'paid';
+class Payment {
+    id: number;
+    status: PaymentStatus = 'new';
+
+    constructor(id: number){
+        this.id = id;
+    }
+
+    pay(){
+        this.status = 'paid';
+    }
+
 }
 
-class Logger implements ILogger {
-    log(...args: any[]): void {
-        console.log(...args);
+class ParsistedPayment extends Payment{
+    dataBaseId: number;
+    paidAt: Date;
+
+    constructor(){
+        const id = Math.random();
+        super(id);
     }
-    async error(...args: any[]): Promise<void> {
-        //кинуть во внешнюю сиситему
-        console.log(...args);
+
+    save(){
+
     }
-    
+
+    override pay(date?: Date){
+        super.pay();
+        if(date){
+            this.paidAt = date;
+        }
+    }
 }
 
-interface IPayable {
-    pay(paymentId: number) : void;
-    price?: number;
-}
-
-interface IDeletable {
-    delete(): void;
-}
-class User implements IPayable, IDeletable{
-    delete(): void {
-        throw new Error("Method not implemented.");
-    }
-    pay(paymentId: number): void {
-        throw new Error("Method not implemented.");
-    }
-   
-}
+new ParsistedPayment().dataBaseId
