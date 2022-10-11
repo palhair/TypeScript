@@ -1,39 +1,73 @@
 "use strict";
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Vehicle_price;
-class Vehicle {
+function isDeliveryToHome(delivery) {
+    return 'adress' in delivery;
+}
+class Cart {
     constructor() {
-        _Vehicle_price.set(this, void 0); //private
+        this.products = [];
+        this.price = 0;
+        this.delivery;
     }
-    set model(m) {
-        this._model = m;
-        __classPrivateFieldSet(this, _Vehicle_price, 100, "f");
+    addToCart(product) {
+        this.products.push(product);
+        this.calculatePrice();
     }
-    get model() {
-        return this._model;
+    deleteFromCart(id) {
+        if (this.products.find(product => product.id == id)) {
+            this.products = this.products.filter(product => {
+                return product.id !== id;
+            });
+        }
+        else {
+            throw new Error('Нет продукта с данным ид');
+        }
+        this.calculatePrice();
     }
-    isPriceEqual(v) {
-        return __classPrivateFieldGet(this, _Vehicle_price, "f") === __classPrivateFieldGet(v, _Vehicle_price, "f"); // имеем досту к приватному свойству внешнего класса
+    setDelivery(delivery, date) {
+        if (typeof delivery == 'number') {
+            this.delivery = {
+                date: new Date(),
+                id: delivery
+            };
+        }
+        else {
+            if (date) {
+                this.delivery = {
+                    date: date,
+                    adress: delivery
+                };
+            }
+        }
     }
-    addDamage(damage) {
-        this.damages.push(damage);
+    chekout() {
+        if (this.delivery == undefined) {
+            throw new Error('Доставка не задана');
+        }
+        else if (this.products.length == 0) {
+            throw new Error('Корзина пустая');
+        }
+        else {
+            console.log(true);
+        }
+    }
+    calculatePrice() {
+        this.products.forEach(product => this.price += product.price);
+        return this.price;
     }
 }
-_Vehicle_price = new WeakMap();
-new Vehicle();
-class EuroTruck extends Vehicle {
-    setRun(km) {
-        this.run = km / 0.62;
+class Product {
+    constructor(id, name, price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
     }
 }
-new EuroTruck();
+const cart = new Cart;
+const shirt = new Product(1, 'Рубашка', 1500), shoes = new Product(2, 'Обувь', 2500), pans = new Product(3, 'Штаны', 2400), hats = new Product(4, 'Шапка', 500);
+cart.addToCart(shirt);
+cart.addToCart(shoes);
+cart.addToCart(pans);
+cart.addToCart(hats);
+cart.setDelivery(33);
+cart.chekout();
+cart.calculatePrice();

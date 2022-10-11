@@ -1,34 +1,99 @@
-class Vehicle {
-    public make: string;//доступны везде
-    private damages: string[];// доступны только в методах класса
-    private _model: string;
-    protected run: number;//доступны в методах класса и методах наследующих классов
-    #price: number;//private
-
-    set model(m: string){
-        this._model = m;
-        this.#price = 100;
-    }
-
-    get model(): string{
-        return this._model;
-    }
-
-    isPriceEqual(v: Vehicle){
-        return this.#price === v.#price; // имеем досту к приватному свойству внешнего класса
-    }
-
-    addDamage(damage: string){
-        this.damages.push(damage)
-    }
+interface IDeliveryToHome {
+    date: Date;
+    adress: string;
 }
 
-new Vehicle();
-
-class EuroTruck extends Vehicle {
-    setRun(km: number) {
-        this.run = km / 0.62;
-    }
+interface IDeliveryToPost {
+    date: Date;
+    id: number
 }
 
-new EuroTruck();
+type Delivery = IDeliveryToPost | IDeliveryToHome;
+
+function isDeliveryToHome (delivery: IDeliveryToHome | IDeliveryToPost ) : delivery is IDeliveryToHome {
+    return 'adress' in delivery;    
+}
+class Cart {
+    private products: Product[] = [];
+    private price: number = 0;
+    private delivery: Delivery;
+    
+
+    addToCart (product: Product): void{
+        this.products.push(product);
+        this.calculatePrice()
+    }
+
+    deleteFromCart(id:number): void{
+        if(this.products.find(product => product.id == id)){
+        this.products = this.products.filter(product => {
+            return product.id !== id;
+        })
+        }else {
+            throw new Error('Нет продукта с данным ид');
+        }
+        this.calculatePrice()
+    }
+
+    setDelivery(delivery: number, ): void;
+    setDelivery(delivery: string, date: Date ): void;
+    setDelivery(delivery: string | number, date?: Date ): void{
+        if (typeof delivery == 'number'){
+            this.delivery = {
+                date: new Date(),
+                id: delivery
+
+            }
+        }else{
+            if(date){
+                this.delivery = {
+                    date: date,
+                    adress: delivery
+                }
+            }
+
+        }
+        
+    }
+    
+    chekout(): void {
+        if ( this.delivery == undefined){
+            throw new Error('Доставка не задана');
+        }else if(this.products.length == 0){
+            throw new Error('Корзина пустая');
+        }else{
+            console.log(true);
+        }
+    }
+
+    calculatePrice(): number{
+        this.products.forEach(product => this.price += product.price);
+        return this.price
+    }
+
+}
+
+class Product {
+    
+    constructor(
+        public id: number,
+        public name: string, 
+        public price: number
+        ){ }
+}
+
+const cart = new Cart;
+const shirt = new Product(1, 'Рубашка', 1500),
+shoes = new Product(2, 'Обувь', 2500),
+pans = new Product(3, 'Штаны', 2400),
+hats = new Product(4, 'Шапка', 500);
+cart.addToCart(shirt);
+cart.addToCart(shoes);
+cart.addToCart(pans);
+cart.addToCart(hats);
+cart.setDelivery(33);
+cart.chekout();
+cart.calculatePrice();
+
+
+
