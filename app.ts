@@ -1,20 +1,33 @@
-class UserService {
-    //static name: string = 'sdfs'; статик нейм зарезервирован
-    private static db: any;
+class Payment {
+    private date: Date = new Date();
 
-    static  getUser(id: number){
-        return UserService.db.findById(id);
+    getDate(this: Payment) {
+        return this.date;
     }
 
-    create() {
-        //...
-        UserService.db
-    }
-    static {
-        UserService.db = 'sfcf'
+    getDateArrow = () => {
+        return this.date
     }
 }
 
-UserService.getUser(1);
-const inst = new UserService(1);
-inst.create();
+const p = new Payment();
+
+ p.getDate;
+
+console.log(p.getDate());
+
+const user = {
+    id: 1,
+    paymentDate: p.getDate.bind(p),
+    paymentDateArrow: p.getDateArrow
+}
+
+console.log(user.paymentDateArrow());
+
+class PaymentPersistent extends Payment{
+    save(){
+        return super.getDate();
+    }
+}
+
+console.log(new PaymentPersistent().save());
