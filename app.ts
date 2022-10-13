@@ -1,28 +1,19 @@
-class UserBuilder {
-    name: string;
+abstract class Controller {
+    abstract handle(req: any): void; // абстрактный метод может быть только внутри абстрактного класса 
 
-    setName(name: string): this{
-        this.name = name;
-        return this;
-    }
-
-    isAdmin(): this is AdminBuilder {
-        return this instanceof AdminBuilder;
+    handleWithLogs(req: any){
+        console.log('Start');
+        this.handle(req);
+        console.log('End');
     }
 }
 
-class AdminBuilder extends UserBuilder{
-    roles: string[];
+
+class UserController extends Controller{
+    handle(req: any): void {
+        console.log(req);
+    }
 }
 
-const res = new UserBuilder().setName('Lord');
-const res2 = new AdminBuilder().setName('Lord');
-
-
-let user: UserBuilder | AdminBuilder = new UserBuilder();
-
-if (user.isAdmin()){
-    console.log(user);
-}else {
-    console.log(user);
-}
+//new Controller - error
+new UserController().handleWithLogs('Request');
