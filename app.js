@@ -1,15 +1,17 @@
 "use strict";
-class Controller {
-    handleWithLogs(req) {
-        console.log('Start');
-        this.handle(req);
-        console.log('End');
+class Logger {
+    printDate() {
+        this.log(new Date().toString());
     }
 }
-class UserController extends Controller {
-    handle(req) {
-        console.log(req);
+class LofWithDate extends Logger {
+    log(message) {
+        console.log(message);
+    }
+    logWithDate(mes) {
+        this.printDate();
+        this.log(mes);
     }
 }
-//new Controller - error
-new UserController().handleWithLogs('Request');
+let obj = new LofWithDate();
+obj.logWithDate('Текущая дата');

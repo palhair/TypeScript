@@ -1,19 +1,20 @@
-abstract class Controller {
-    abstract handle(req: any): void; // абстрактный метод может быть только внутри абстрактного класса 
-
-    handleWithLogs(req: any){
-        console.log('Start');
-        this.handle(req);
-        console.log('End');
+abstract class Logger {
+    abstract log(message: string): void;
+    printDate(){
+        this.log(new Date().toString());
     }
 }
 
+class LofWithDate extends Logger {
+    log(message){
+        console.log(message);
+    }
 
-class UserController extends Controller{
-    handle(req: any): void {
-        console.log(req);
+    logWithDate(mes: string){
+        this.printDate();
+        this.log(mes);
     }
 }
 
-//new Controller - error
-new UserController().handleWithLogs('Request');
+let obj = new LofWithDate();
+obj.logWithDate('Текущая дата');
