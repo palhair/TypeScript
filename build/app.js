@@ -9,4 +9,12 @@ function getHalfArr(data) {
     return data.splice(0, l);
 }
 getHalfArr([1, 4, 22]);
-getHalfArr([1, 4, "22"]);
+const split = getHalfArr;
+const split2 = getHalfArr;
+const logLine = {
+    timeStamp: new Date(),
+    data: {
+        a: 1,
+        b: 3
+    }
+};
