@@ -1,17 +1,19 @@
 "use strict";
-class Vehicle {
+class Resp {
+    constructor(data, error) {
+        if (data) {
+            this.data = data;
+        }
+        if (error) {
+            this.error = error;
+        }
+    }
 }
-function kmToMiles(vehicle) {
-    vehicle.run = vehicle.run / 0.62;
-    return vehicle;
+const res = new Resp("data", 1);
+class HTTPResp extends Resp {
+    setCode(code) {
+        this.code = code;
+    }
 }
-class LCV extends Vehicle {
-}
-const vehicle = kmToMiles(new Vehicle());
-const lcv = kmToMiles(new LCV());
-kmToMiles({ run: 1 }); //работает как интерфейс
-function logId(id, additionalData) {
-    console.log(id);
-    console.log(additionalData);
-    return { id, data: additionalData };
-}
+const res2 = new HTTPResp();
+res2.setCode(0);

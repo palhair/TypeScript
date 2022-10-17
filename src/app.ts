@@ -1,23 +1,26 @@
-class Vehicle { // можно использовать также интерфейсы
-    run: number;
+class Resp<D, E> {
+    data?: D;
+    error?: E;
+
+    constructor(data?: D, error?: E){
+        if(data){
+            this.data = data;
+        }
+        if(error){
+            this.error = error;
+        }
+    }
+
 }
 
-function kmToMiles<T extends Vehicle>(vehicle: T) : T { 
-    vehicle.run = vehicle.run / 0.62;
-    return vehicle;
+const res = new Resp<string, number> ("data", 1)
+
+class HTTPResp<F> extends Resp<string, number> {
+    code: F;
+    setCode(code: F):void {
+        this.code = code;
+    }
 }
 
-class LCV extends Vehicle {
-    capacity: number;
-}
-
-const vehicle = kmToMiles(new Vehicle());
-const lcv = kmToMiles(new LCV());
-
-kmToMiles({run: 1})//работает как интерфейс
-
-function logId <T extends string | number, Y>(id: T, additionalData: Y): {id: T, data: Y}{
-    console.log(id);
-    console.log(additionalData)
-    return {id, data: additionalData};
-}
+const res2 = new HTTPResp<number>();
+res2.setCode(0)
