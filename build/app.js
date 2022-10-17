@@ -1,20 +1,17 @@
 "use strict";
-function logMiddleware(data) {
-    console.log(data);
-    return data;
+class Vehicle {
 }
-const res = logMiddleware([12, 33]);
-function getHalfArr(data) {
-    const l = data.length / 2;
-    return data.splice(0, l);
+function kmToMiles(vehicle) {
+    vehicle.run = vehicle.run / 0.62;
+    return vehicle;
 }
-getHalfArr([1, 4, 22]);
-const split = getHalfArr;
-const split2 = getHalfArr;
-const logLine = {
-    timeStamp: new Date(),
-    data: {
-        a: 1,
-        b: 3
-    }
-};
+class LCV extends Vehicle {
+}
+const vehicle = kmToMiles(new Vehicle());
+const lcv = kmToMiles(new LCV());
+kmToMiles({ run: 1 }); //работает как интерфейс
+function logId(id, additionalData) {
+    console.log(id);
+    console.log(additionalData);
+    return { id, data: additionalData };
+}

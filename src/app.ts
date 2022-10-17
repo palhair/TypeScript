@@ -1,34 +1,23 @@
-function logMiddleware<T>(data: T): T {
-    console.log(data);
-    return data;
+class Vehicle { // можно использовать также интерфейсы
+    run: number;
 }
 
-const res = logMiddleware<number []>([12, 33]);
-
-function getHalfArr<T>(data: Array<T>): Array<T> {
-    const l = data.length/2;
-    return data.splice(0, l);
+function kmToMiles<T extends Vehicle>(vehicle: T) : T { 
+    vehicle.run = vehicle.run / 0.62;
+    return vehicle;
 }
 
-getHalfArr<number>([1, 4, 22]);
-
-const split: <T> (data: Array<T>) => Array<T> = getHalfArr;
-const split2: <Y> (data: Array<Y>) => Array<Y> = getHalfArr;
-
-interface ILogLine <T> {
-    timeStamp: Date;
-    data: T;
+class LCV extends Vehicle {
+    capacity: number;
 }
 
-const logLine: logLineType<{a:number, b:number}> = {
-    timeStamp: new Date(),
-    data: {
-        a:1,
-        b:3
-    }
-}
+const vehicle = kmToMiles(new Vehicle());
+const lcv = kmToMiles(new LCV());
 
-type logLineType<T> = {
-    timeStamp: Date;
-    data: T;
+kmToMiles({run: 1})//работает как интерфейс
+
+function logId <T extends string | number, Y>(id: T, additionalData: Y): {id: T, data: Y}{
+    console.log(id);
+    console.log(additionalData)
+    return {id, data: additionalData};
 }
