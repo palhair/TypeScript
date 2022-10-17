@@ -1,21 +1,10 @@
 "use strict";
-class List {
-    constructor(items) {
-        this.items = items;
-    }
+const key = 'name';
+function getValue(obj, key) {
+    return obj[key];
 }
-class ExtendedListClass extends List {
-    first() {
-        return this.items[0];
-    }
-}
-function ExtendedList(Base) {
-    return class ExtendedList extends Base {
-        first() {
-            return this.items[0];
-        }
-    };
-}
-const list = ExtendedList(List);
-let res = new list(['first', 'second']);
-console.log(res.first());
+const user = {
+    name: 'Vasya',
+    age: 30
+};
+const userName = getValue(user, 'name');
