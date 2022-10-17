@@ -1,19 +1,21 @@
 "use strict";
-class Resp {
-    constructor(data, error) {
-        if (data) {
-            this.data = data;
-        }
-        if (error) {
-            this.error = error;
-        }
+class List {
+    constructor(items) {
+        this.items = items;
     }
 }
-const res = new Resp("data", 1);
-class HTTPResp extends Resp {
-    setCode(code) {
-        this.code = code;
+class ExtendedListClass extends List {
+    first() {
+        return this.items[0];
     }
 }
-const res2 = new HTTPResp();
-res2.setCode(0);
+function ExtendedList(Base) {
+    return class ExtendedList extends Base {
+        first() {
+            return this.items[0];
+        }
+    };
+}
+const list = ExtendedList(List);
+let res = new list(['first', 'second']);
+console.log(res.first());

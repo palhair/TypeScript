@@ -1,26 +1,38 @@
-class Resp<D, E> {
-    data?: D;
-    error?: E;
+type Constructor = new (...args: any[]) => {}
 
-    constructor(data?: D, error?: E){
-        if(data){
-            this.data = data;
-        }
-        if(error){
-            this.error = error;
-        }
-    }
+type GConstructor<T = {}> = new (...args: any[]) => T
 
+class List{
+    constructor(public items: string[]) { }
 }
 
-const res = new Resp<string, number> ("data", 1)
+class Accordion{
+    isOpened: boolean;
+}
 
-class HTTPResp<F> extends Resp<string, number> {
-    code: F;
-    setCode(code: F):void {
-        this.code = code;
+type ListType = GConstructor<List>;
+type AccordionType = GConstructor<Accordion>;
+class ExtendedListClass extends List {
+    first() {
+        return this.items[0];
     }
 }
 
-const res2 = new HTTPResp<number>();
-res2.setCode(0)
+function ExtendedList<TBase extends ListType & AccordionType>(Base: TBase) {
+    return class ExtendedList extends Base {
+        first() {
+            
+            return this.items[0];
+        }
+    }
+}
+
+class AccordionList {
+    isOpened: boolean;
+    constructor(public items: string[]) { }
+
+}
+
+const list = ExtendedList(AccordionList);
+let res = new list(['first', 'second']);
+console.log(res.first());
