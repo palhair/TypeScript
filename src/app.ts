@@ -1,43 +1,26 @@
-interface Data {
-    group: number;
-    name: string;
+let strOrNumb: string | number 
+if(Math.random() > 0.5) {
+    strOrNumb = 5;
+}else{
+    strOrNumb = 'str'
 }
 
-const data: Data[] = [
-    {group: 1, name: 'a'},
-    {group: 1, name: 'b'},
-    {group: 2, name: 'c'},
-]
-
-interface IGroup<T> {
-    [key: string]: T[]
-
+if (typeof strOrNumb === 'string'){
+    console.log(strOrNumb);
+}else{
+    console.log(strOrNumb);
 }
 
-type Key = number | string;
+let str2OrNumb: typeof strOrNumb;
 
-function group<T extends Record<Key, any>, K extends keyof T> (arrObj: T[], key: K): IGroup<T>{
-    let groupObj: IGroup<T> = {};
-    arrObj.forEach(obj => {
-        
-        let keyGroup = obj[key];
-        if(Array.isArray(groupObj[keyGroup])){
+const user = {
+    name: 'Klod'
+};
 
-            groupObj[keyGroup].push(obj);
-        }else{
-            groupObj[keyGroup] = [obj];
-        }
-    });
-    
-    return groupObj;
+type keyOfUser = keyof typeof user;
+
+enum Direction {
+    Up,
+    Down
 }
-
-let res = group(data, 'group');
-
-
-function print<T extends Record<Key, any>> (res: IGroup<T>): void{
-    for (let i in res){
-        console.log(res[i]);
-    }
-}
-print(res);
+type d = keyof typeof Direction;
