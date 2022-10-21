@@ -1,14 +1,24 @@
-function runTransaction(transaction: {
-   fromTo: [string, string] 
-}) {
-    console.log(transaction);
+type Modifier = 'read' | 'update' | 'create';
+
+type UserRoles = {
+    customers?: Modifier,
+    project: Modifier,
+    adminPanel?: Modifier
 }
 
-const transaction: GetFirstArg <typeof runTransaction> = {
-    fromTo: ['1', '2']
+type ModifierToAccess<Type> = {
+    +readonly[Property in keyof Type as `canAccess${string & Property}`]-?: boolean;
 }
 
+type ModifierToAccess2<Type> = {
+    +readonly[Property in keyof Type as Exclude<`canAccess${string & Property}`, 'canAccessadminPanel' >]-?: boolean;
+}
 
+type UserAccess2 = ModifierToAccess<UserRoles>;
+type UserAccess3 = ModifierToAccess2<UserRoles>;
 
-type GetFirstArg <T> = T extends (first: infer First, ...args: any[]) => any ? First : never;
-runTransaction (transaction);
+type UserAccess1 = {
+    customers?: boolean,
+    project?: boolean,
+    admin?: boolean
+}
