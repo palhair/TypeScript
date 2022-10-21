@@ -1,18 +1,31 @@
-type ReadOrWrite = 'canread' | 'canwrite';
-type Bulk = 'bulk' | '';
-
-type Access = `can${Capitalize<ReadOrWrite>}${Capitalize<Bulk>}`;
-
-type ReadOrWriteBulk<T> = T extends `can${infer R}`? R: never;
-
-type T = ReadOrWriteBulk<ReadOrWrite>;
-
-type ErrorOrSuccess = 'error' | 'success';
-
-type ResponseT = {
-    result: `http${Capitalize<ErrorOrSuccess>}`
+type User = {
+    name: string,
+    age?: number;
+    email: string;
 }
 
-const a: ResponseT = {
-    result: 'httpSuccess'
+type partial = Partial<User>
+
+const p: partial = {};
+
+type required = Required<User>;
+type requiredAndReadonly = Readonly<required>;
+type requiredAndReadonly2 = Required<Readonly<required>>;
+
+
+//omit pick extract exlude
+
+interface IPaymentPersistent {
+    id: number;
+    sum: number;
+    from: string;
+    to: string;
 }
+
+type Payment = Omit<IPaymentPersistent, 'id' >;
+type Paymetrequests = Pick<IPaymentPersistent, 'from' | 'to'>;
+
+
+type ExtractEx = Extract<"fdd"| "dffs"| Payment, string>;
+type ExcludeEx = Exclude<"fdd"| "dffs"| Payment, string>;
+

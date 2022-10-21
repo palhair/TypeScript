@@ -1,4 +1,2 @@
 "use strict";
-const a = {
-    result: 'httpSuccess'
-};
+const p = {};
