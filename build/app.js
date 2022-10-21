@@ -1,23 +1,13 @@
 "use strict";
-let strOrNumb;
-if (Math.random() > 0.5) {
-    strOrNumb = 5;
-}
-else {
-    strOrNumb = 'str';
-}
-if (typeof strOrNumb === 'string') {
-    console.log(strOrNumb);
-}
-else {
-    console.log(strOrNumb);
-}
-let str2OrNumb;
 const user = {
-    name: 'Klod'
+    name: 'waer',
+    roles: [],
+    permission: {
+        endDate: new Date
+    }
 };
-var Direction;
-(function (Direction) {
-    Direction[Direction["Up"] = 0] = "Up";
-    Direction[Direction["Down"] = 1] = "Down";
-})(Direction || (Direction = {}));
+const nameUser = user['name'];
+const roleNames = 'roles';
+let roleNames2 = 'roles';
+const roles = ['admin', 'user', 'super-user'];
+const dfdf = 'user';
