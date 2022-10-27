@@ -5,11 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-// @nullUser
-let UserServise = 
-// @threeUserAdvanced
-//@setUserAdvanced(845)
-class UserServise {
+let UserServise = class UserServise {
     constructor() {
         this.users = 1000;
     }
@@ -18,43 +14,16 @@ class UserServise {
     }
 };
 UserServise = __decorate([
-    log(),
-    setUsers(25)
-    // @threeUserAdvanced
-    //@setUserAdvanced(845)
+    createdAt
 ], UserServise);
-function nullUser(target) {
-    target.prototype.users = 0;
-}
-function setUsers(users) {
-    console.log('setUsers init');
-    return (target) => {
-        console.log('setUsers run');
-        target.prototype.users = users;
-    };
-}
-function log() {
-    console.log('log init');
-    return (target) => {
-        console.log('log run');
-    };
-}
-function setUserAdvanced(users) {
-    return (constructor) => {
-        return class extends constructor {
-            constructor() {
-                super(...arguments);
-                this.users = users;
-            }
-        };
-    };
-}
-function threeUserAdvanced(constructor) {
+function createdAt(constructor) {
     return class extends constructor {
         constructor() {
             super(...arguments);
-            this.users = 3;
+            this.createdAt = new Date;
         }
     };
 }
-console.log(new UserServise().getUserInDatabase());
+const user = new UserServise();
+console.log(user.createdAt);
+setTimeout(() => console.log(new UserServise()), 1000);
