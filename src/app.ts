@@ -3,24 +3,30 @@ interface IUserService {
     getUserInDatabase(): number;
 }
 
-@createdAt
 class UserServise implements IUserService {
     users: number = 1000 ;
+
+    @Log
     getUserInDatabase(): number {
-        return this.users;
+        throw new Error('Ошибка');
     }
 
 }
 
-function createdAt <T extends {new (...args: any[]):{}}> (constructor: T){
-    return class extends constructor {
-        createdAt: Date = new Date;
+
+console.log(new UserServise().getUserInDatabase())
+
+function Log(
+    target: Object,
+    propertyKey: string | symbol,
+    descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
+):TypedPropertyDescriptor<(...args: any[]) => any> | void
+{
+    console.log(target);
+    console.log(propertyKey);
+    console.log(descriptor);
+    descriptor.value = () => {
+        console.log('no error');
+                       
     }
 }
-
-type createdAt = {
-    createdAt: Date;
-}
-const user = new UserServise() as IUserService & createdAt;
-console.log(user.createdAt)
-setTimeout(() => console.log(new UserServise()), 1000);
