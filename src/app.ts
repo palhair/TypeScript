@@ -5,39 +5,29 @@ interface IUserService {
 
 class UserServise implements IUserService {
     private _users: number;
-
     
-    set users(num: number){
-        this._users = num;
-    }
-    @Log()
-    get users(){
+    getUserInDatabase(): number {
         return this._users;
     }
 
-    
-    getUserInDatabase(): number {
-        throw new Error('Ошибка');
+    setUserInDatabase(@Positive() num: number,@Positive() _: number  ): void {
+       this._users = num;
     }
 
 }
 
 
 
-function Log() {
+function Positive() {
     return (
         target: Object,
-        _: string | symbol,
-        descriptor: PropertyDescriptor
+        propertyKey: string | symbol,
+        parametrIndex: number
     ) => {
-        const set = descriptor.set;
-        descriptor.set = (...args: any) => {
-            console.log(args)
-            set?.apply(target, args);
-        }
+        console.log(target);
+        console.log(propertyKey);
+        console.log(parametrIndex);
     }
 }
 
 const userService = new UserServise();
-userService.users = 1;
-console.log(userService.users)

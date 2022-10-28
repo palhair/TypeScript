@@ -5,29 +5,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 class UserServise {
-    set users(num) {
-        this._users = num;
-    }
-    get users() {
+    getUserInDatabase() {
         return this._users;
     }
-    getUserInDatabase() {
-        throw new Error('Ошибка');
+    setUserInDatabase(num, _) {
+        this._users = num;
     }
 }
 __decorate([
-    Log()
-], UserServise.prototype, "users", null);
-function Log() {
-    return (target, _, descriptor) => {
-        const set = descriptor.set;
-        descriptor.set = (...args) => {
-            console.log(args);
-            set === null || set === void 0 ? void 0 : set.apply(target, args);
-        };
+    __param(0, Positive()),
+    __param(1, Positive())
+], UserServise.prototype, "setUserInDatabase", null);
+function Positive() {
+    return (target, propertyKey, parametrIndex) => {
+        console.log(target);
+        console.log(propertyKey);
+        console.log(parametrIndex);
     };
 }
 const userService = new UserServise();
-userService.users = 1;
-console.log(userService.users);
