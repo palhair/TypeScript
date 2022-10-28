@@ -6,7 +6,7 @@ interface IUserService {
 class UserServise implements IUserService {
     users: number = 1000 ;
 
-    @Log
+    @Cathes(true)
     getUserInDatabase(): number {
         throw new Error('Ошибка');
     }
@@ -14,19 +14,35 @@ class UserServise implements IUserService {
 }
 
 
-console.log(new UserServise().getUserInDatabase())
+new UserServise().getUserInDatabase()
 
-function Log(
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
-):TypedPropertyDescriptor<(...args: any[]) => any> | void
-{
-    console.log(target);
-    console.log(propertyKey);
-    console.log(descriptor);
-    descriptor.value = () => {
-        console.log('no error');
+function Cathes(rethrow: boolean = false) {
+    return (
+        target: Object,
+        _: string | symbol,
+        descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
+    ):TypedPropertyDescriptor<(...args: any[]) => any> | void =>
+    {
+        const oldValue = descriptor.value;
+        descriptor.value = async (...args: any[]) =>{
+           
+                try{
+                    return await oldValue?.apply(target, args);
+                    
+                }catch(e){
+                    if (rethrow) {
                        
+                        throw e;
+                       
+                    }else{
+                        if(e instanceof Error){
+                            console.log(e.message)
+                        }
+                    }
+                }
+            
+        }
+        
+    
     }
 }
