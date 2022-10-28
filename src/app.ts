@@ -1,11 +1,19 @@
 interface IUserService {
-    users: number;
+    
     getUserInDatabase(): number;
 }
 
 class UserServise implements IUserService {
-    @Max(100)
-    users: number = 1000 ;
+    private _users: number;
+
+    
+    set users(num: number){
+        this._users = num;
+    }
+    @Log()
+    get users(){
+        return this._users;
+    }
 
     
     getUserInDatabase(): number {
@@ -14,30 +22,22 @@ class UserServise implements IUserService {
 
 }
 
-const user = new UserServise()
-user.users = 1;
-console.log(user.users);
-user.users = 101;
 
-function Max(max: number) {
+
+function Log() {
     return (
         target: Object,
-        propertyKey: string | symbol,
+        _: string | symbol,
+        descriptor: PropertyDescriptor
     ) => {
-        let value: number;
-        const setter = function(newValue: number){
-            if(newValue > max){
-                console.log(`Больше ${max}`)
-            }else{
-                value = newValue;
-            }
+        const set = descriptor.set;
+        descriptor.set = (...args: any) => {
+            console.log(args)
+            set?.apply(target, args);
         }
-        const getter = function(){
-            return value;
-        }
-        Object.defineProperty(target, propertyKey, {
-            set: setter,
-            get: getter
-        })
     }
 }
+
+const userService = new UserServise();
+userService.users = 1;
+console.log(userService.users)
