@@ -1,37 +1,73 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+class TFInsurance {
+    setVehicle(vehicle) {
+        this._vehicle = vehicle;
     }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+    submit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield fetch('/', {
+                method: "POST",
+                body: JSON.stringify({ vehicle: this._vehicle })
+            });
+            const data = yield res.json();
+            return data.isSuccess;
+        });
+    }
+}
+class ABInsurance {
+    setVehicle(vehicle) {
+        this._vehicle = vehicle;
+    }
+    submit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield fetch('...', {
+                method: "POST",
+                body: JSON.stringify({ vehicle: this._vehicle })
+            });
+            const data = yield res.json();
+            return data.true;
+        });
+    }
+}
+class InsuranceFactory {
+    saveHistory(ins) {
+        this.db.save(ins.id, ins.status);
+    }
+}
+class TFInsuranceFactory extends InsuranceFactory {
+    createInsurance() {
+        return new TFInsurance;
+    }
+}
+class ABInsuranceFactory extends InsuranceFactory {
+    createInsurance() {
+        return new ABInsurance;
+    }
+}
+const tfInsurance = new TFInsuranceFactory();
+const ins = tfInsurance.createInsurance();
+tfInsurance.saveHistory(ins);
+const INSURANCE_TYPE = {
+    tf: TFInsurance,
+    ab: ABInsurance
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const app2_1 = __importStar(require("./module/app2"));
-const app2_2 = __importDefault(require("./module/app2"));
-const all = __importStar(require("./module/app2"));
-const app2_3 = require("./module/app2");
-(0, app2_2.default)();
-console.log(app2_1.a);
-(0, app2_1.default)();
-console.log(all.a);
-new app2_3.Test();
+class InsuranceFactoryAlt {
+    createInsurance(ins) {
+        return INSURANCE_TYPE[ins];
+    }
+    saveHistory(ins) {
+        this.db.save(ins.id, ins.status);
+    }
+}
+const insAlt = new InsuranceFactoryAlt();
+const ins2 = new (insAlt.createInsurance('tf'));
+insAlt.saveHistory(ins2);
