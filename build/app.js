@@ -1,44 +1,40 @@
 "use strict";
-class TelegpamProvider {
-    sendMessage(messege) {
-        console.log(messege);
-    }
-    connect(config) {
-        console.log(config);
-    }
-    disconnect() {
-        console.log('disconnect TG');
+class Notify {
+    send(template, to) {
+        console.log(`Отпправляю ${template}: ${to}`);
     }
 }
-class WhatsUpProvider {
-    sendMessage(messege) {
-        console.log(messege);
-    }
-    connect(config) {
-        console.log(config);
-    }
-    disconnect() {
-        console.log('disconnect WU');
+class Log {
+    log(message) {
+        console.log(message);
     }
 }
-class NotificatoinSender {
-    constructor(provider) {
-        this.provider = provider;
+class Template {
+    constructor() {
+        this.templates = [
+            { name: 'other', template: '<h1>Шаблон!</h1>' }
+        ];
     }
-    send() {
-        this.provider.connect('connect');
-        this.provider.sendMessage('message');
-        this.provider.disconnect();
-    }
-}
-class DelayNotificatoinSender extends NotificatoinSender {
-    constructor(provider) {
-        super(provider);
-    }
-    sendDelayed() {
+    getByName(name) {
+        return this.templates.find(t => t.name === name);
     }
 }
-let senderTG = new NotificatoinSender(new TelegpamProvider());
-let senderWU = new NotificatoinSender(new WhatsUpProvider());
-senderTG.send();
-senderWU.send();
+class NotificationFacad {
+    constructor() {
+        this.notify = new Notify();
+        this.logger = new Log();
+        this.template = new Template();
+    }
+    send(to, temlateName) {
+        const data = this.template.getByName(temlateName);
+        if (!data) {
+            this.logger.log('Не найден шаблон');
+            return;
+        }
+        this.notify.send(data.template, to);
+        this.logger.log("Шаблон отправлен");
+    }
+}
+const s = new NotificationFacad();
+s.send('sfasd', 'other');
+s.send('sfasd', 'dfdd');

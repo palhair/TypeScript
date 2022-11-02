@@ -1,53 +1,46 @@
-interface IProvider {
-    sendMessage(messege: string):void;
-    connect(config: unknown): void;
-    disconnect(): void;
-}
-
-class TelegpamProvider implements IProvider{
-   
-    sendMessage(messege: string): void {
-        console.log(messege);
-    }
-    connect(config: string): void {
-        console.log(config);
-    }
-    disconnect(): void {
-        console.log('disconnect TG');
-    }
-}
-class WhatsUpProvider implements IProvider{
-   
-    sendMessage(messege: string): void {
-        console.log(messege);
-    }
-    connect(config: string): void {
-        console.log(config);
-    }
-    disconnect(): void {
-        console.log('disconnect WU');
+class Notify {
+    send(template: string, to: string){
+        console.log(`Отпправляю ${template}: ${to}`);
     }
 }
 
-class NotificatoinSender {
-    constructor(private provider: IProvider){}
-    send(){
-        this.provider.connect('connect');
-        this.provider.sendMessage('message');
-        this.provider.disconnect();
+class Log {
+    log(message: string){
+        console.log(message);
     }
 }
 
-class DelayNotificatoinSender extends NotificatoinSender {
-    constructor(provider: IProvider){
-        super(provider);
-    }
-    sendDelayed(){
+class Template {
+    private templates = [
+        {name: 'other', template: '<h1>Шаблон!</h1>'}
+    ];
 
+    getByName(name: string){
+        return this.templates.find(t => t.name === name);
     }
 }
 
-let senderTG = new NotificatoinSender(new TelegpamProvider());
-let senderWU = new NotificatoinSender(new WhatsUpProvider());
-senderTG.send();
-senderWU.send();
+class NotificationFacad {
+    private notify: Notify;
+    private logger: Log;
+    private template: Template;
+    constructor(){
+        this.notify = new Notify();
+        this.logger = new Log();
+        this.template = new Template()
+    }
+
+    send(to: string, temlateName: string){
+        const data = this.template.getByName(temlateName);
+        if(!data){
+            this.logger.log('Не найден шаблон');
+            return;
+        }
+        this.notify.send(data.template, to);
+        this.logger.log("Шаблон отправлен");
+    }
+}
+
+const s = new NotificationFacad();
+s.send('sfasd', 'other');
+s.send('sfasd', 'dfdd');
