@@ -1,51 +1,44 @@
 "use strict";
-var ImageFormat;
-(function (ImageFormat) {
-    ImageFormat["Png"] = "png";
-    ImageFormat["Jpeg"] = "jpeg";
-})(ImageFormat || (ImageFormat = {}));
-class ImageBuilder {
-    constructor() {
-        this.formats = [];
-        this.resolutions = [];
+class TelegpamProvider {
+    sendMessage(messege) {
+        console.log(messege);
     }
-    addPng() {
-        if (this.formats.includes(ImageFormat.Png)) {
-            return this;
-        }
-        this.formats.push(ImageFormat.Png);
-        return this;
+    connect(config) {
+        console.log(config);
     }
-    addJpeg() {
-        if (this.formats.includes(ImageFormat.Jpeg)) {
-            return this;
-        }
-        this.formats.push(ImageFormat.Jpeg);
-        return this;
-    }
-    addResolution(width, height) {
-        this.resolutions.push({ width: width, height: height });
-        return this;
-    }
-    build() {
-        let res = [];
-        for (let r of this.resolutions) {
-            for (let f of this.formats) {
-                res.push({
-                    format: f,
-                    width: r.width,
-                    height: r.height
-                });
-            }
-        }
-        return res;
+    disconnect() {
+        console.log('disconnect TG');
     }
 }
-console.log(new ImageBuilder()
-    .addJpeg()
-    .addPng()
-    .addJpeg()
-    .addResolution(500, 1000)
-    .addResolution(700, 200)
-    .addResolution(400, 300)
-    .build());
+class WhatsUpProvider {
+    sendMessage(messege) {
+        console.log(messege);
+    }
+    connect(config) {
+        console.log(config);
+    }
+    disconnect() {
+        console.log('disconnect WU');
+    }
+}
+class NotificatoinSender {
+    constructor(provider) {
+        this.provider = provider;
+    }
+    send() {
+        this.provider.connect('connect');
+        this.provider.sendMessage('message');
+        this.provider.disconnect();
+    }
+}
+class DelayNotificatoinSender extends NotificatoinSender {
+    constructor(provider) {
+        super(provider);
+    }
+    sendDelayed() {
+    }
+}
+let senderTG = new NotificatoinSender(new TelegpamProvider());
+let senderWU = new NotificatoinSender(new WhatsUpProvider());
+senderTG.send();
+senderWU.send();
