@@ -1,40 +1,28 @@
 "use strict";
-class Notify {
-    send(template, to) {
-        console.log(`Отпправляю ${template}: ${to}`);
-    }
-}
-class Log {
-    log(message) {
-        console.log(message);
-    }
-}
-class Template {
+class KVDatabase {
     constructor() {
-        this.templates = [
-            { name: 'other', template: '<h1>Шаблон!</h1>' }
-        ];
+        this.db = new Map();
     }
-    getByName(name) {
-        return this.templates.find(t => t.name === name);
+    save(key, value) {
+        this.db.set(key, value);
     }
 }
-class NotificationFacad {
-    constructor() {
-        this.notify = new Notify();
-        this.logger = new Log();
-        this.template = new Template();
-    }
-    send(to, temlateName) {
-        const data = this.template.getByName(temlateName);
-        if (!data) {
-            this.logger.log('Не найден шаблон');
-            return;
-        }
-        this.notify.send(data.template, to);
-        this.logger.log("Шаблон отправлен");
+class PersistentDB {
+    savePersistent(data) {
+        console.log(data);
     }
 }
-const s = new NotificationFacad();
-s.send('sfasd', 'other');
-s.send('sfasd', 'dfdd');
+class PersistendDBAdapter extends KVDatabase {
+    constructor(database) {
+        super();
+        this.database = database;
+    }
+    save(key, value) {
+        this.database.savePersistent({ key, value });
+    }
+}
+function run(base) {
+    base.save('key', 'myValue');
+}
+run(new KVDatabase());
+run(new PersistendDBAdapter(new PersistentDB));
