@@ -1,68 +1,56 @@
-abstract class DeliveryItem {
-    items: DeliveryItem[] = [];
-    addItem(item: DeliveryItem){
-        this.items.push(item);
+interface IMiddleware {
+    next(mid: IMiddleware): IMiddleware;
+    handle(request: any): any;
+}
+
+
+abstract class  AbstractMiddleware implements IMiddleware {
+    private nextMidlleware: IMiddleware;
+    next(mid: IMiddleware): IMiddleware {
+        this.nextMidlleware = mid;
+        return this.nextMidlleware;
     }
-    abstract getPrice(): number;
-    getPriceItem(): number {
-        return this.items.reduce((acc:number, i: DeliveryItem) => acc += i.getPrice(), 0)
+    handle(request: any) {
+       if(this.nextMidlleware){
+            return this.nextMidlleware.handle(request);
+       }
+
+       return;
     }
-    getList(): any[] | string {
-        return this.items.reduce( (acc: any[] , i: DeliveryItem ) =>  {
-            let listOritem = i.getList();
-            
-                acc.push(listOritem);
-            
-            return acc;
-        }, [])
+        
+}
+
+class AuthMiddleware extends AbstractMiddleware {
+    override handle(request: any) {
+        console.log('AuthMiddleware');
+        if(request.id == 1){
+            return super.handle(request);
+        }
+        return{error: 'Вы не авторизованы'};
     }
 }
 
-class DeliveryShop extends DeliveryItem{
-    constructor(private deliveryFee:number){
-        super();
+class ValidateMiddleware extends AbstractMiddleware {
+    override handle(request: any) {
+        console.log('ValidateMiddleware');
+        if(request.body){
+            return super.handle(request);
+        }
+        return{error: 'Нет боди'};
     }
-    getPrice(): number {
-        return this.getPriceItem() + this.deliveryFee;
+}
+class Controller extends AbstractMiddleware {
+    override handle(request: any) {
+        console.log('Controller');
+        
+        return {success: request};
     }
-  
-
 }
 
-class Package extends DeliveryItem{
-    
-    getPrice(): number {
-        return this.getPriceItem();
-    }
+const auth = new AuthMiddleware();
+const validate = new ValidateMiddleware();
+const controller = new Controller();
 
-}
+auth.next(validate).next(controller);
 
-class Product extends DeliveryItem {
-    constructor(private price:number, private name: string){
-        super();
-    }
-    getPrice(): number {
-        return this.price;
-    }
-    override getList(): string {
-       return `${this.name}: ${this.price} руб`; 
-    }
-
-}
-
-let shop = new DeliveryShop(100);
-shop.addItem(new Product(200, 'Кабель'));
-shop.addItem(new Product(1200, 'Зарядка'));
-const pack = new Package();
-pack.addItem(new Product(150, 'Пленка'));
-pack.addItem(new Product(50, 'Салфетка'));
-const subPack = new Package();
-subPack.addItem(new Product(9000, 'Телефон'));
-subPack.addItem(new Product(5000, 'Наушники'));
-subPack.addItem(new Product(500, 'Чехол'));
-pack.addItem(subPack);
-shop.addItem(pack);
-shop.addItem(new Product(1500, 'mouse'));
-shop.addItem(new Package());
-console.log(shop.getPrice());
-console.log(shop.getList());
+console.log (auth.handle({id: 1, body: 'TELO'}));

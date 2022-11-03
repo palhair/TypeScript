@@ -1,62 +1,42 @@
 "use strict";
-class DeliveryItem {
-    constructor() {
-        this.items = [];
+class AbstractMiddleware {
+    next(mid) {
+        this.nextMidlleware = mid;
+        return this.nextMidlleware;
     }
-    addItem(item) {
-        this.items.push(item);
-    }
-    getPriceItem() {
-        return this.items.reduce((acc, i) => acc += i.getPrice(), 0);
-    }
-    getList() {
-        return this.items.reduce((acc, i) => {
-            let listOritem = i.getList();
-            acc.push(listOritem);
-            return acc;
-        }, []);
+    handle(request) {
+        if (this.nextMidlleware) {
+            return this.nextMidlleware.handle(request);
+        }
+        return;
     }
 }
-class DeliveryShop extends DeliveryItem {
-    constructor(deliveryFee) {
-        super();
-        this.deliveryFee = deliveryFee;
-    }
-    getPrice() {
-        return this.getPriceItem() + this.deliveryFee;
-    }
-}
-class Package extends DeliveryItem {
-    getPrice() {
-        return this.getPriceItem();
+class AuthMiddleware extends AbstractMiddleware {
+    handle(request) {
+        console.log('AuthMiddleware');
+        if (request.id == 1) {
+            return super.handle(request);
+        }
+        return { error: 'Вы не авторизованы' };
     }
 }
-class Product extends DeliveryItem {
-    constructor(price, name) {
-        super();
-        this.price = price;
-        this.name = name;
-    }
-    getPrice() {
-        return this.price;
-    }
-    getList() {
-        return `${this.name}: ${this.price} руб`;
+class ValidateMiddleware extends AbstractMiddleware {
+    handle(request) {
+        console.log('ValidateMiddleware');
+        if (request.body) {
+            return super.handle(request);
+        }
+        return { error: 'Нет боди' };
     }
 }
-let shop = new DeliveryShop(100);
-shop.addItem(new Product(200, 'Кабель'));
-shop.addItem(new Product(1200, 'Зарядка'));
-const pack = new Package();
-pack.addItem(new Product(150, 'Пленка'));
-pack.addItem(new Product(50, 'Салфетка'));
-const subPack = new Package();
-subPack.addItem(new Product(9000, 'Телефон'));
-subPack.addItem(new Product(5000, 'Наушники'));
-subPack.addItem(new Product(500, 'Чехол'));
-pack.addItem(subPack);
-shop.addItem(pack);
-shop.addItem(new Product(1500, 'mouse'));
-shop.addItem(new Package());
-console.log(shop.getPrice());
-console.log(shop.getList());
+class Controller extends AbstractMiddleware {
+    handle(request) {
+        console.log('Controller');
+        return { success: request };
+    }
+}
+const auth = new AuthMiddleware();
+const validate = new ValidateMiddleware();
+const controller = new Controller();
+auth.next(validate).next(controller);
+console.log(auth.handle({ id: 1, body: 'TELO' }));
