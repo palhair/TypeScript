@@ -1,28 +1,26 @@
 "use strict";
-class KVDatabase {
+class PaymentAPI {
     constructor() {
-        this.db = new Map();
+        this.data = [{ id: 1, sum: 10000 }];
     }
-    save(key, value) {
-        this.db.set(key, value);
-    }
-}
-class PersistentDB {
-    savePersistent(data) {
-        console.log(data);
+    getPaypentDetail(id) {
+        return this.data.find(d => d.id == id);
     }
 }
-class PersistendDBAdapter extends KVDatabase {
-    constructor(database) {
-        super();
-        this.database = database;
+class PaymentAccessProxy {
+    constructor(api, userId) {
+        this.api = api;
+        this.userId = userId;
     }
-    save(key, value) {
-        this.database.savePersistent({ key, value });
+    getPaypentDetail(id) {
+        if (this.userId === 1) {
+            return this.api.getPaypentDetail(id);
+        }
+        console.log('Попытка не пытка');
+        return undefined;
     }
 }
-function run(base) {
-    base.save('key', 'myValue');
-}
-run(new KVDatabase());
-run(new PersistendDBAdapter(new PersistentDB));
+const payment = new PaymentAccessProxy(new PaymentAPI, 1);
+//const payment1 = new PaymentAccessProxy(new PaymentAPI, 3);
+console.log(payment.getPaypentDetail(1));
+//console.log(payment1.getPaypentDetail(1));
