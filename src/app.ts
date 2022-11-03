@@ -1,33 +1,68 @@
-interface IPaymentAPI{
-    getPaypentDetail(id: number):IPaymentDetail | undefined;
+abstract class DeliveryItem {
+    items: DeliveryItem[] = [];
+    addItem(item: DeliveryItem){
+        this.items.push(item);
+    }
+    abstract getPrice(): number;
+    getPriceItem(): number {
+        return this.items.reduce((acc:number, i: DeliveryItem) => acc += i.getPrice(), 0)
+    }
+    getList(): any[] | string {
+        return this.items.reduce( (acc: any[] , i: DeliveryItem ) =>  {
+            let listOritem = i.getList();
+            
+                acc.push(listOritem);
+            
+            return acc;
+        }, [])
+    }
 }
 
-interface IPaymentDetail {
-    id: number;
-    sum: number;
+class DeliveryShop extends DeliveryItem{
+    constructor(private deliveryFee:number){
+        super();
+    }
+    getPrice(): number {
+        return this.getPriceItem() + this.deliveryFee;
+    }
+  
+
 }
 
-class PaymentAPI implements IPaymentAPI{
-    private data: IPaymentDetail[] = [{id:1, sum: 10000}];
-    getPaypentDetail(id: number): IPaymentDetail | undefined {
-        return this.data.find(d => d.id == id);
+class Package extends DeliveryItem{
+    
+    getPrice(): number {
+        return this.getPriceItem();
     }
 
 }
 
-class PaymentAccessProxy implements IPaymentAPI {
-    constructor(private api: PaymentAPI, private userId: number){}
-    getPaypentDetail(id: number): IPaymentDetail | undefined {
-        if (this.userId === 1){
-            return this.api.getPaypentDetail(id);
-        }
-        console.log('Попытка не пытка');
-        return undefined;
+class Product extends DeliveryItem {
+    constructor(private price:number, private name: string){
+        super();
+    }
+    getPrice(): number {
+        return this.price;
+    }
+    override getList(): string {
+       return `${this.name}: ${this.price} руб`; 
     }
 
 }
 
-const payment = new PaymentAccessProxy(new PaymentAPI, 1);
-//const payment1 = new PaymentAccessProxy(new PaymentAPI, 3);
-console.log(payment.getPaypentDetail(1));
-//console.log(payment1.getPaypentDetail(1));
+let shop = new DeliveryShop(100);
+shop.addItem(new Product(200, 'Кабель'));
+shop.addItem(new Product(1200, 'Зарядка'));
+const pack = new Package();
+pack.addItem(new Product(150, 'Пленка'));
+pack.addItem(new Product(50, 'Салфетка'));
+const subPack = new Package();
+subPack.addItem(new Product(9000, 'Телефон'));
+subPack.addItem(new Product(5000, 'Наушники'));
+subPack.addItem(new Product(500, 'Чехол'));
+pack.addItem(subPack);
+shop.addItem(pack);
+shop.addItem(new Product(1500, 'mouse'));
+shop.addItem(new Package());
+console.log(shop.getPrice());
+console.log(shop.getList());
