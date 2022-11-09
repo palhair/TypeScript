@@ -1,56 +1,53 @@
-interface IMiddleware {
-    next(mid: IMiddleware): IMiddleware;
-    handle(request: any): any;
+interface Mediator {
+    notifi(sender: string, event: string): void;
 }
 
-
-abstract class  AbstractMiddleware implements IMiddleware {
-    private nextMidlleware: IMiddleware;
-    next(mid: IMiddleware): IMiddleware {
-        this.nextMidlleware = mid;
-        return this.nextMidlleware;
+abstract class Mediated {
+    mediator: Mediator;
+    setMediator(mediator: Mediator){
+        this.mediator = mediator;
     }
-    handle(request: any) {
-       if(this.nextMidlleware){
-            return this.nextMidlleware.handle(request);
-       }
-
-       return;
-    }
-        
 }
 
-class AuthMiddleware extends AbstractMiddleware {
-    override handle(request: any) {
-        console.log('AuthMiddleware');
-        if(request.id == 1){
-            return super.handle(request);
+class Notifications {
+    send(){
+        console.log("Отправляю уведомление");
+    }
+}
+
+class Log {
+    log(message:string){
+        console.log(message);
+    }
+}
+
+class EventHandler extends Mediated {
+    myEvent(){
+        this.mediator.notifi('EventHandler', 'myEvent');
+    }
+}
+
+class NotificationMediator implements Mediator{
+    constructor(
+        public logger: Log,
+        public event: EventHandler,
+        public notification: Notifications
+    ){}
+    notifi(sender: string, event: string): void {
+        switch(event){
+            case 'myEvent':
+                this.notification.send();
+                this.logger.log('Отправлено');
+                break;
         }
-        return{error: 'Вы не авторизованы'};
     }
 }
 
-class ValidateMiddleware extends AbstractMiddleware {
-    override handle(request: any) {
-        console.log('ValidateMiddleware');
-        if(request.body){
-            return super.handle(request);
-        }
-        return{error: 'Нет боди'};
-    }
-}
-class Controller extends AbstractMiddleware {
-    override handle(request: any) {
-        console.log('Controller');
-        
-        return {success: request};
-    }
-}
+const handler = new EventHandler();
+const logger = new Log();
+const notifications = new Notifications();
 
-const auth = new AuthMiddleware();
-const validate = new ValidateMiddleware();
-const controller = new Controller();
+const m = new NotificationMediator(logger, handler, notifications);
 
-auth.next(validate).next(controller);
-
-console.log (auth.handle({id: 1, body: 'TELO'}));
+handler.setMediator(m);
+handler.myEvent();
