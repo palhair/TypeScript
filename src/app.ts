@@ -1,81 +1,47 @@
-class DocumentItem {
-    public text: string;
-    private state: DocumentItemState;
+class User {
+    githubToken: string;
+    jwtToken: string;
+}
 
-    constructor(){
-        this.setState(new DraftDocumentItemState());
-        
+interface IAuthStrategy {
+    auth(user: User): boolean;
+}
+
+class Auth {
+    constructor(private strategy: IAuthStrategy) { }
+
+    setStrategy(strategy: IAuthStrategy){
+        this.strategy = strategy;
     }
 
-    getState() {
-        return this.state;
-    }
-
-    setState(state: DocumentItemState){
-        this.state = state;
-        this.state.setContext(this);
-    }
-
-    publishDoc(){
-        this.state.publish();
-    }
-
-    deleteDoc(){
-        this.state.delete();
+    public authUser(user: User): boolean {
+        return this.strategy.auth(user);
     }
 }
 
-abstract class DocumentItemState {
-    public name: string;
-    public item: DocumentItem;
-
-    setContext (item: DocumentItem) {
-        this.item = item;
+class JWTStrategy implements IAuthStrategy {
+    auth(user: User): boolean {
+        if(user.jwtToken){
+            return true;
+        }
+        return false;
     }
 
-    public abstract publish(): void;
-    public abstract delete(): void;
 }
-
-class DraftDocumentItemState extends DocumentItemState {
-    constructor(){
-        super();
-        this.name = "DraftDocument";
-    }
-
-    public publish(): void {
-        console.log(`Текст ${this.item.text} опубликован`);
-        this.item.setState(new PublicDocumentItemState());
-    }
-    public delete(): void {
-        console.log(`Нельзя снять с публикации не опубликованный докумует`)
-    }
-    
-}
-
-class PublicDocumentItemState extends DocumentItemState {
-
-    constructor(){
-        super();
-        this.name = "PublicDocument";
-    }
-    public publish(): void {
-        console.log('Нельзя опубликовать опубликованный документ');
-    }
-    public delete(): void {
-        console.log('Документ снят с публикации');
-        this.item.setState(new DraftDocumentItemState());
+class GithubStrategy implements IAuthStrategy {
+    auth(user: User): boolean {
+        if(user.githubToken){
+            return true;
+        }
+        return false;
     }
 
 }
 
-const doc = new DocumentItem();
-doc.text = 'Пост!'
+const user = new User();
+user.jwtToken = 'token';
 
-console.log(doc.getState().name);
-doc.deleteDoc();
-doc.publishDoc();
-doc.publishDoc();
-console.log(doc.getState().name);
-doc.deleteDoc();
-console.log(doc.getState().name);
+const auth = new Auth(new JWTStrategy());
+console.log(auth.authUser(user));
+auth.setStrategy(new GithubStrategy());
+console.log(auth.authUser(user));
