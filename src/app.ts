@@ -1,79 +1,81 @@
-class User {
-    constructor(public userId: number){}
-}
+class DocumentItem {
+    public text: string;
+    private state: DocumentItemState;
 
-class CommandHistory{
-    public commands: Command[] = [];
-    push(command: Command){
-        this.commands.push(command);
-    }
-    remove(command: Command){
-        this.commands = this.commands.filter(c => c.commandId !== command.commandId);
-    }
-}
-
-abstract class Command {
-    public commandId: number;
-
-    abstract execute(): void;
-
-    constructor(public history: CommandHistory){
-        this.commandId = Math.random();
-    }
-}
-
-class addUserCommand extends Command {
-    constructor(
-        private user: User,
-        private recevier: UserService, 
-        history: CommandHistory
-        ){
-        super(history);
-    }
-    execute(): void {
-        this.recevier.saveUser(this.user);
-        this.history.push(this);
-
-    }
-
-    undo(){
-        this.recevier.deleteUser(this.user.userId);
-        this.history.remove(this);
-    }
-}
-
-class UserService {
-    saveUser(user: User){
-        console.log(`Сохраняю пользователя с Id ${user.userId}`);
-    }
-
-    deleteUser(userId: number){
-        console.log(`Удаляем пользователя с id ${userId}`)
-    }
-}
-
-class Controller {
-    recevier: UserService
-    
-    history: CommandHistory = new CommandHistory();
-    addRecivier(recevier: UserService){
-        this.recevier = recevier;
-    }
-    run() {
-        const addUser = new addUserCommand(
-            new User(1),
-            this.recevier,
-            this.history
-        )
-        addUser.execute();
-        console.log(addUser.history);
-        addUser.undo();
-        console.log(addUser.history);
+    constructor(){
+        this.setState(new DraftDocumentItemState());
         
     }
+
+    getState() {
+        return this.state;
+    }
+
+    setState(state: DocumentItemState){
+        this.state = state;
+        this.state.setContext(this);
+    }
+
+    publishDoc(){
+        this.state.publish();
+    }
+
+    deleteDoc(){
+        this.state.delete();
+    }
 }
 
-const controller = new Controller();
-controller.addRecivier(new UserService());
-controller.run();
+abstract class DocumentItemState {
+    public name: string;
+    public item: DocumentItem;
 
+    setContext (item: DocumentItem) {
+        this.item = item;
+    }
+
+    public abstract publish(): void;
+    public abstract delete(): void;
+}
+
+class DraftDocumentItemState extends DocumentItemState {
+    constructor(){
+        super();
+        this.name = "DraftDocument";
+    }
+
+    public publish(): void {
+        console.log(`Текст ${this.item.text} опубликован`);
+        this.item.setState(new PublicDocumentItemState());
+    }
+    public delete(): void {
+        console.log(`Нельзя снять с публикации не опубликованный докумует`)
+    }
+    
+}
+
+class PublicDocumentItemState extends DocumentItemState {
+
+    constructor(){
+        super();
+        this.name = "PublicDocument";
+    }
+    public publish(): void {
+        console.log('Нельзя опубликовать опубликованный документ');
+    }
+    public delete(): void {
+        console.log('Документ снят с публикации');
+        this.item.setState(new DraftDocumentItemState());
+    }
+
+}
+
+const doc = new DocumentItem();
+doc.text = 'Пост!'
+
+console.log(doc.getState().name);
+doc.deleteDoc();
+doc.publishDoc();
+doc.publishDoc();
+console.log(doc.getState().name);
+doc.deleteDoc();
+console.log(doc.getState().name);
