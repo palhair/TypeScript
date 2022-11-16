@@ -1,104 +1,36 @@
 "use strict";
-var _a, _b;
-class Task {
-    constructor(priority) {
-        this.priority = priority;
+class Form {
+    constructor(name) {
+        this.name = name;
     }
 }
-var IteratorName;
-(function (IteratorName) {
-    IteratorName[IteratorName["INC"] = 0] = "INC";
-    IteratorName[IteratorName["DEC"] = 1] = "DEC";
-})(IteratorName || (IteratorName = {}));
-class TaskList {
-    constructor() {
-        this.tasks = [];
+class SaveForm {
+    save(form) {
+        const res = this.fill(form);
+        this.log(res);
+        this.send(res);
     }
-    addTask(task) {
-        this.tasks.push(task);
-    }
-    sortByPriority() {
-        this.tasks.sort((a, b) => a.priority - b.priority);
-    }
-    sortDescPriority() {
-        this.tasks.sort((a, b) => b.priority - a.priority);
-    }
-    getTask() {
-        return this.tasks;
-    }
-    count() {
-        return this.tasks.length;
-    }
-    getIterator(iteratorName) {
-        let iterator;
-        switch (iteratorName) {
-            case IteratorName.INC:
-                iterator = new PriorityTaskIterator(this);
-                break;
-            case IteratorName.DEC:
-                iterator = new DescPriorityIterator(this);
-                break;
-        }
-        return iterator;
+    log(data) {
+        console.log(data);
     }
 }
-class PriorityTaskIterator {
-    constructor(taskList) {
-        this.position = 0;
-        taskList.sortByPriority();
-        this.taskList = taskList;
+class FirstAPI extends SaveForm {
+    fill(form) {
+        return form.name;
     }
-    curent() {
-        return this.taskList.getTask()[this.position];
-    }
-    next() {
-        this.position += 1;
-        return this.taskList.getTask()[this.position];
-    }
-    previos() {
-        this.position -= 1;
-        return this.taskList.getTask()[this.position];
-    }
-    index() {
-        return this.position;
+    send(data) {
+        console.log(`Sending ${data}`);
     }
 }
-class DescPriorityIterator {
-    constructor(taskList) {
-        this.position = 0;
-        taskList.sortDescPriority();
-        this.taskList = taskList;
+class SecondAPI extends SaveForm {
+    fill(form) {
+        return { fio: form.name };
     }
-    curent() {
-        return this.taskList.getTask()[this.position];
-    }
-    next() {
-        this.position += 1;
-        return this.taskList.getTask()[this.position];
-    }
-    previos() {
-        this.position -= 1;
-        return this.taskList.getTask()[this.position];
-    }
-    index() {
-        return this.position;
+    send(data) {
+        console.log(`Sending ${data}`);
     }
 }
-const taskList = new TaskList();
-taskList.addTask(new Task(1));
-taskList.addTask(new Task(4));
-taskList.addTask(new Task(7));
-taskList.addTask(new Task(3));
-taskList.addTask(new Task(19));
-taskList.addTask(new Task(45));
-taskList.addTask(new Task(22));
-const iterator = taskList.getIterator(IteratorName.DEC);
-while (iterator.curent() !== undefined) {
-    console.log((_a = iterator.curent()) === null || _a === void 0 ? void 0 : _a.priority);
-    iterator.next();
-}
-const deskIterator = taskList.getIterator(IteratorName.INC);
-while (deskIterator.curent() !== undefined) {
-    console.log((_b = deskIterator.curent()) === null || _b === void 0 ? void 0 : _b.priority);
-    deskIterator.next();
-}
+const form1 = new Form('Kennedy');
+const first = new FirstAPI(), second = new SecondAPI();
+first.save(form1);
+second.save(form1);
